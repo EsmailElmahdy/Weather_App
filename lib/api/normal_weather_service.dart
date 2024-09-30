@@ -8,18 +8,17 @@ import 'models/normal/weather_model.dart';
 class WeatherService {
   final String apiKey = '903b8e4d1788c82221eadac06ca4d553';
 
-  Future<WeatherModel?> fetchWeatherData() async {
+  Future<WeatherModel?> fetchWeatherData(String unit) async { // Add unit parameter
     try {
-      // Get current position (latitude, longitude)
       Position? position = await LocationHandler.getCurrentPosition();
 
       if (position != null) {
         double latitude = position.latitude;
         double longitude = position.longitude;
 
-        // Construct the API URL with your coordinates
+        // Construct the API URL with the selected unit
         String apiUrl =
-            'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey';
+            'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=$unit&appid=$apiKey';
 
         final response = await http.get(Uri.parse(apiUrl));
 
@@ -43,3 +42,4 @@ class WeatherService {
     }
   }
 }
+

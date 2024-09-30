@@ -4,7 +4,9 @@ import 'api/models/forecast/list_model_forecast.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
 class ForecastScreen extends StatefulWidget {
-  const ForecastScreen({super.key});
+  final String selectedUnit;
+
+  const ForecastScreen({super.key, required this.selectedUnit});
 
   @override
   State<ForecastScreen> createState() => _ForecastScreenState();
@@ -22,7 +24,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
   void _getForecastData() async {
     ForecastService forecastService = ForecastService();
-    ForecastModel? data = await forecastService.fetchForecastData();
+    ForecastModel? data = await forecastService.fetchForecastData(widget.selectedUnit);
 
     if (data != null) {
       // Filter the forecast data to get one entry per day

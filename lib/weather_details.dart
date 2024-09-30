@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api/models/normal/weather_model.dart';
 import 'api/normal_weather_service.dart';
 
 
 class CloudsScreen extends StatefulWidget {
-  const CloudsScreen({super.key});
+  final String selectedUnit;
+
+  const CloudsScreen({super.key, required this.selectedUnit});
 
   @override
   State<CloudsScreen> createState() => _CloudsScreenState();
@@ -27,6 +30,7 @@ class _CloudsScreenState extends State<CloudsScreen> {
 
   @override
   void initState() {
+    super.initState();
     fetchWeather();
   }
 
@@ -486,9 +490,16 @@ class _CloudsScreenState extends State<CloudsScreen> {
   }
 
   Future<void> fetchWeather() async {
-    WeatherService weatherService = WeatherService();
-    WeatherModel? model = await weatherService.fetchWeatherData();
+    // Get the saved unit from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedUnit = prefs.getString('selectedUnit') ?? 'metric'; // Default to 'metric' if no unit is saved
 
+    WeatherService weatherService = WeatherService();
+
+    // Fetch the weather data using the unit from SharedPreferences
+    WeatherModel? model = await weatherService.fetchWeatherData(savedUnit);
+
+    // Update the state with the fetched weather data
     setState(() {
       weatherModel = model;
       highDegree = weatherModel!.main!.tempMax.toString();
@@ -501,6 +512,6 @@ class _CloudsScreenState extends State<CloudsScreen> {
       visibility = x.toString();
       pressure = weatherModel!.main!.pressure!;
     });
-
   }
+
 }

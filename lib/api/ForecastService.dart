@@ -7,7 +7,7 @@ import 'models/forecast/list_model_forecast.dart';
 class ForecastService {
   final String apiKey = '903b8e4d1788c82221eadac06ca4d553';
 
-  Future<ForecastModel?> fetchForecastData() async {
+  Future<ForecastModel?> fetchForecastData(String unit) async {
     try {
       // Get current position (latitude, longitude)
       Position? position = await LocationHandler.getCurrentPosition();
@@ -16,9 +16,9 @@ class ForecastService {
         double latitude = position.latitude;
         double longitude = position.longitude;
 
-        // Construct the API URL with your coordinates
+        // Use the unit passed from the drawer (either 'metric' or 'imperial')
         String apiUrl =
-            'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey';
+            'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=$unit&appid=$apiKey';
 
         final response = await http.get(Uri.parse(apiUrl));
 
@@ -42,3 +42,4 @@ class ForecastService {
     }
   }
 }
+
