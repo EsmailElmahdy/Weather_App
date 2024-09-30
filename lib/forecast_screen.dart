@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api/ForecastService.dart';
 import 'api/models/forecast/list_model_forecast.dart';
 import 'package:intl/intl.dart'; // For date formatting
@@ -24,30 +25,48 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
   void _getForecastData() async {
     ForecastService forecastService = ForecastService();
-    ForecastModel? data = await forecastService.fetchForecastData(widget.selectedUnit);
 
-    if (data != null) {
-      // Filter the forecast data to get one entry per day
-      Map<String, ForecastList> uniqueDays = {};
+    try {
+      // Retrieve the saved unit from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? savedUnit = prefs.getString('selectedUnit') ?? 'metric'; // Default to 'metric' if no value is saved
 
-      for (var forecast in data.forecastList) {
-        // Extract only the date (yyyy-MM-dd) from dt_txt
-        String date = DateFormat('yyyy-MM-dd').format(DateTime.parse(forecast.date));
+      // Fetch forecast data using the saved unit
+      ForecastModel? data = await forecastService.fetchForecastData(savedUnit);
 
-        // If the date is not yet in the map, add the forecast
-        if (!uniqueDays.containsKey(date)) {
-          uniqueDays[date] = forecast;
+      if (data != null) {
+        // Filter the forecast data to get one entry per day
+        Map<String, ForecastList> uniqueDays = {};
+
+        for (var forecast in data.forecastList) {
+          // Extract only the date (yyyy-MM-dd) from dt_txt
+          String date = DateFormat('yyyy-MM-dd').format(DateTime.parse(forecast.date));
+
+          // If the date is not yet in the map, add the forecast
+          if (!uniqueDays.containsKey(date)) {
+            uniqueDays[date] = forecast;
+          }
         }
+
+        // Convert map values to a list and limit it to 10 days
+        dailyForecasts = uniqueDays.values.take(10).toList();
       }
 
-      // Convert map values to a list and limit it to 10 days
-      dailyForecasts = uniqueDays.values.take(10).toList();
+      setState(() {
+        forecastData = data;
+      });
+    } catch (e) {
+      // Handle any errors that might occur during the fetch
+      print("Error fetching forecast data: $e");
+      // Optionally show a snackbar or dialog to inform the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching forecast data: $e'),
+        ),
+      );
     }
-
-    setState(() {
-      forecastData = data;
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
