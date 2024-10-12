@@ -1,2 +1,3 @@
 # weather App
 
+[upload]
