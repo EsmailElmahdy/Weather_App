@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled8/Country_List.dart';
+import 'package:untitled8/api/models/normal/main_model_normal.dart';
 import 'package:untitled8/home_screen.dart';
+import 'package:untitled8/seach_screen.dart';
 import 'api/models/normal/weather_model.dart';
 import 'api/normal_weather_service.dart';
 
@@ -31,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+   
     Size size = MediaQuery.of(context).size;
     double screenHeight = size.height;
     double screenWidth = size.width;
@@ -39,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
       body: Container(
         width: screenWidth,
         height: screenHeight,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/bg.png'),
             fit: BoxFit.cover,
@@ -50,17 +54,34 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Positioned(
               bottom: screenWidth * 0.1,
-              child: Image(
+              child: const Image(
                 image: AssetImage('assets/images/house.png'),
                 fit: BoxFit.cover,
               ),
             ),
             Positioned(
-              top: screenWidth * 0.2,
+              top: screenWidth * 0.1,
               child: Column(
                 children: [
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: ()  {
+                          Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchListScreen()));
+                                   
+                          },
+                          icon: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
                   Text(
-                    cityName,
+                   cityName,
                     style: TextStyle(
                       fontFamily: 'SanProDisplay',
                       color: Colors.white,
@@ -80,7 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                     weatherStatus, // Weather status
                     style: TextStyle(
                       fontFamily: 'SanProDisplay',
-                      color: Color(0xEBEBF599),
+                      color: const Color(0xEBEBF599),
                       fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold,
                     ),
@@ -109,7 +130,8 @@ class _MainScreenState extends State<MainScreen> {
     try {
       // Retrieve the saved unit from SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? savedUnit = prefs.getString('selectedUnit') ?? 'metric'; // Default to 'metric' if no value is saved
+      String? savedUnit = prefs.getString('selectedUnit') ??
+          'metric'; // Default to 'metric' if no value is saved
 
       // Fetch weather data using the saved unit
       WeatherModel? model = await weatherService.fetchWeatherData(savedUnit);
@@ -138,5 +160,4 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
   }
-
 }
