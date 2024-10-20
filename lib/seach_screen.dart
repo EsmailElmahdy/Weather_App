@@ -11,7 +11,7 @@ class SearchListScreen extends StatefulWidget {
 }
 
 class _SearchListScreenState extends State<SearchListScreen> {
-  List<String> countries = helper.countries; 
+  List<String> countries = helper.countriesCoordinates.keys.toList(); 
 
   @override
   Widget build(BuildContext context) {

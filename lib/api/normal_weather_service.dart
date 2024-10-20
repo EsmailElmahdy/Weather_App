@@ -43,7 +43,7 @@ class WeatherService {
       
           // Construct the API URL with the selected unit
           apiUrl =
-              'https://api.openweathermap.org/data/2.5/weather?q=$Country&units=$unit&appid=$apiKey';
+              'https://api.openweathermap.org/data/2.5/weather?lat=${helper.countriesCoordinates[Country]?[0]}&lon=${helper.countriesCoordinates[Country]?[1]}&units=$unit&appid=$apiKey';
 
           final response = await http.get(Uri.parse(apiUrl));
 

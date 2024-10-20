@@ -34,7 +34,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     Size size = MediaQuery.of(context).size;
     double screenHeight = size.height;
     double screenWidth = size.width;
@@ -67,12 +66,11 @@ class _MainScreenState extends State<MainScreen> {
                     // mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                          onPressed: ()  {
-                          Navigator.push(
+                          onPressed: () {
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SearchListScreen()));
-                                   
                           },
                           icon: const Icon(
                             Icons.search,
@@ -81,7 +79,9 @@ class _MainScreenState extends State<MainScreen> {
                     ],
                   ),
                   Text(
-                   cityName,
+                    helper.Country != null
+                        ? "$cityName (${helper.Country})"
+                        : cityName,
                     style: TextStyle(
                       fontFamily: 'SanProDisplay',
                       color: Colors.white,
