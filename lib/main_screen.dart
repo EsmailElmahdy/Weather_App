@@ -58,19 +58,35 @@ class _MainScreenState extends State<MainScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            Positioned(
-              top: screenWidth * 0.1,
+            Container(
+              padding: EdgeInsets.only(top: screenWidth * 0.13),
+              // top: screenWidth * 0.13,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
+                          padding: EdgeInsets.only(left: screenWidth * 0.07),
+                          onPressed: () {
+                            setState(() {
+                              helper.Country = null;
+                              fetchWeather();
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.my_location,
+                            color: Colors.white,
+                          )),
+                      IconButton(
+                          padding: EdgeInsets.only(right: screenWidth * 0.07),
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SearchListScreen()));
+                                    builder: (context) =>
+                                        const SearchListScreen()));
                           },
                           icon: const Icon(
                             Icons.search,
@@ -78,15 +94,15 @@ class _MainScreenState extends State<MainScreen> {
                           )),
                     ],
                   ),
-                  Text(
-                    helper.Country != null
-                        ? "$cityName (${helper.Country})"
-                        : cityName,
-                    style: TextStyle(
-                      fontFamily: 'SanProDisplay',
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.09,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    child: Text(
+                      cityName,
+                      style: TextStyle(
+                        fontFamily: 'SanProDisplay',
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.09,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(
@@ -115,6 +131,19 @@ class _MainScreenState extends State<MainScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                              fetchWeather();
+                            });
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.white,
+                        )),
+                  )
                 ],
               ),
             ),
